@@ -238,16 +238,20 @@ Implicit policies parameterized by generative models,such as Diffusion Policy, h
                 Square nut assembly task with precise manipulation.
               </div>
             </div>
-            <!-- Tool Hang Task -->
-            <div class="column is-3-desktop is-half-tablet is-full-mobile has-text-centered" style="flex-shrink: 0;">
-              <video controls style="width:100%;max-width:100%;border-radius:8px;" poster="">
+          </div>
+
+          <!-- Emergent Retry Behavior Subsection -->
+          <h3 class="title is-4" style="margin-top: 2em; margin-bottom: 1em;">Emergent Retry Behavior</h3>
+          <div class="columns is-centered" style="margin-bottom: 1.5em;">
+            <div class="column is-half-desktop is-half-tablet is-full-mobile has-text-centered">
+              <video id="tool-hang-video" controls style="width:100%;max-width:100%;border-radius:8px;" poster="">
                 <source src="static/videos/tool_hang.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
               <div class="is-size-6" style="margin-top: 0.5em;">
                 <strong>Tool Hang</strong>
                 <br>
-                Tool hanging task demonstrating complex retry capability.
+                Demonstrates emergent zero-shot retry behavior without explicit retry training.
               </div>
             </div>
           </div>
@@ -550,6 +554,23 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () =>
       navigator.clipboard.writeText(code.innerText.trim())
     )
+  }
+
+  const toolHang = document.getElementById('tool-hang-video')
+  if (toolHang) {
+    const hasDuration = () => Number.isFinite(toolHang.duration) && toolHang.duration > 0
+    const endTime = () => Math.max(0, toolHang.duration - 2)
+    const enforce = () => {
+      if (!hasDuration()) return
+      const end = endTime()
+      if (toolHang.currentTime >= end) {
+        toolHang.currentTime = end
+        toolHang.pause()
+      }
+    }
+    toolHang.addEventListener('timeupdate', enforce)
+    toolHang.addEventListener('seeking', enforce)
+    toolHang.addEventListener('loadedmetadata', enforce)
   }
 })
 </script>
